@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="1254" viewBox="0 0 1254 1254" role="img" aria-label="Loki terminal logo transparent">
+  <defs>
+    <linearGradient id="blue" x1="290" y1="260" x2="980" y2="940" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7aa2f7"/>
+      <stop offset="100%" stop-color="#5d8ff6"/>
+    </linearGradient>
+    <linearGradient id="frameBlue" x1="510" y1="315" x2="945" y2="745" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#638ee9" stop-opacity="0.72"/>
+      <stop offset="100%" stop-color="#4167b7" stop-opacity="0.78"/>
+    </linearGradient>
+    <filter id="softGlow" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="blur"/>
+      <feFlood flood-color="#7aa2f7" flood-opacity="0.38" result="glowColor"/>
+      <feComposite in="glowColor" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="subtleFrameGlow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur"/>
+      <feFlood flood-color="#7aa2f7" flood-opacity="0.18" result="glowColor"/>
+      <feComposite in="glowColor" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g filter="url(#softGlow)">
+    <path d="M322 297H464V780H893L965 851V922H322Z" fill="url(#blue)"/>
+    <path d="M539 419L571 420L688 537L570 656H539L538 634L634 537L538 441Z" fill="url(#blue)"/>
+    <path d="M706 621H775V691H706Z" fill="url(#blue)"/>
+  </g>
+  <path d="M510 327H898Q930 327 930 365V745" fill="none" stroke="url(#frameBlue)" stroke-width="27" stroke-linecap="butt" stroke-linejoin="round" filter="url(#subtleFrameGlow)"/>
+</svg>

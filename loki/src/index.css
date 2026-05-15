@@ -1,0 +1,481 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --loki-bg: #1a1b26;
+  --loki-fg: #c0caf5;
+  --loki-border: #292e42;
+  --loki-accent: #7aa2f7;
+  --loki-sidebar: #16161e;
+  --loki-block-bg: #1a1b26;
+  --loki-block-hover: #1f2335;
+  --loki-block-success: #9ece6a;
+  --loki-block-error: #f7768e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--loki-bg);
+  color: var(--loki-fg);
+  overflow: hidden;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--loki-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--loki-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--loki-accent);
+}
+
+/* ── Terminal wrapper ── */
+.terminal-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-xterm-container {
+  flex: 1;
+  min-height: 120px;
+  overflow: hidden;
+}
+
+.terminal-xterm-container .xterm {
+  height: 100%;
+  padding: 4px 8px;
+}
+
+.terminal-error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--loki-bg);
+  z-index: 10;
+}
+
+.terminal-error-content {
+  text-align: center;
+  padding: 1.5rem;
+  max-width: 28rem;
+}
+
+.terminal-error-title {
+  color: var(--loki-block-error);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.terminal-error-message {
+  color: var(--loki-fg);
+  opacity: 0.6;
+  font-size: 0.875rem;
+}
+
+/* ── Block list ── */
+.block-list {
+  flex-shrink: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 50%;
+}
+
+.block-list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  flex-shrink: 0;
+}
+
+/* ── Block container ── */
+.block-container {
+  position: relative;
+  border: 1px solid var(--loki-border);
+  border-radius: 8px;
+  background: var(--loki-block-bg);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.block-container:hover {
+  border-color: var(--loki-accent);
+  background: var(--loki-block-hover);
+}
+
+.block-container.block-status-error {
+  border-left: 3px solid var(--loki-block-error);
+  background: color-mix(in srgb, var(--loki-block-error) 4%, var(--loki-block-bg));
+}
+
+.block-container.block-status-error:hover {
+  background: color-mix(in srgb, var(--loki-block-error) 6%, var(--loki-block-hover));
+}
+
+.block-container.block-status-running {
+  border-left: 3px solid var(--loki-accent);
+}
+
+/* ── Block header ── */
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--loki-border);
+  min-height: 32px;
+  user-select: none;
+}
+
+.block-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.block-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.block-command {
+  color: var(--loki-fg);
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Pulsing indicator ── */
+.block-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--loki-accent);
+  flex-shrink: 0;
+  animation: block-pulse-anim 1.2s ease-in-out infinite;
+}
+
+@keyframes block-pulse-anim {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ── Exit code badge ── */
+.block-exit-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.block-exit-code.success {
+  background: color-mix(in srgb, var(--loki-block-success) 20%, transparent);
+  color: var(--loki-block-success);
+}
+
+.block-exit-code.error {
+  background: color-mix(in srgb, var(--loki-block-error) 20%, transparent);
+  color: var(--loki-block-error);
+}
+
+.block-exit-code.running {
+  color: var(--loki-accent);
+}
+
+/* ── Block metadata ── */
+.block-duration {
+  color: var(--loki-fg);
+  opacity: 0.4;
+  font-size: 11px;
+}
+
+.block-timestamp {
+  color: var(--loki-fg);
+  opacity: 0.35;
+  font-size: 11px;
+}
+
+.block-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--loki-fg);
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 10px;
+  border-radius: 3px;
+  transition: opacity 0.15s;
+}
+
+.block-collapse-btn:hover {
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Block body ── */
+.block-body {
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+  max-height: 600px;
+}
+
+.block-body.collapsed {
+  max-height: 140px;
+  overflow: hidden;
+}
+
+.block-output {
+  margin: 0;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--loki-fg);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.block-output-empty {
+  color: var(--loki-fg);
+  opacity: 0.3;
+  font-style: italic;
+}
+
+.block-truncate-hint {
+  display: block;
+  text-align: center;
+  color: var(--loki-fg);
+  opacity: 0.3;
+  font-size: 11px;
+  padding: 4px 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* ── Block toolbar (floating) ── */
+.block-toolbar {
+  position: absolute;
+  top: -2px;
+  right: 8px;
+  display: flex;
+  gap: 2px;
+  background: var(--loki-sidebar);
+  border: 1px solid var(--loki-border);
+  border-radius: 6px;
+  padding: 2px;
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.block-toolbar.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.block-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 26px;
+  background: none;
+  border: none;
+  color: var(--loki-fg);
+  opacity: 0.6;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.block-toolbar-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.block-toolbar-btn-accent {
+  color: var(--loki-accent);
+}
+
+/* ── Block selection highlight ── */
+.block-container.block-selected {
+  border-color: var(--loki-accent);
+  background: color-mix(in srgb, var(--loki-accent) 8%, var(--loki-block-bg));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--loki-accent) 30%, transparent);
+}
+
+.block-container.block-selected:hover {
+  background: color-mix(in srgb, var(--loki-accent) 12%, var(--loki-block-hover));
+}
+
+.block-select-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--loki-accent);
+  color: var(--loki-bg);
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Selection toolbar (global multi-block) ── */
+.selection-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: color-mix(in srgb, var(--loki-accent) 12%, var(--loki-sidebar));
+  border: 1px solid color-mix(in srgb, var(--loki-accent) 40%, var(--loki-border));
+  border-radius: 8px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.selection-toolbar-count {
+  color: var(--loki-fg);
+  opacity: 0.7;
+  font-size: 12px;
+  margin-right: auto;
+}
+
+.selection-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--loki-border);
+  border-radius: 5px;
+  background: var(--loki-block-bg);
+  color: var(--loki-fg);
+  font-size: 12px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.selection-toolbar-btn:hover {
+  background: var(--loki-block-hover);
+  border-color: var(--loki-accent);
+}
+
+.selection-toolbar-btn-primary {
+  background: var(--loki-accent);
+  border-color: var(--loki-accent);
+  color: var(--loki-bg);
+  font-weight: 600;
+}
+
+.selection-toolbar-btn-primary:hover {
+  background: color-mix(in srgb, var(--loki-accent) 85%, white);
+  border-color: color-mix(in srgb, var(--loki-accent) 85%, white);
+}
+
+/* ── Command suggestion overlay ── */
+.command-suggestion-overlay {
+  position: absolute;
+  bottom: 4px;
+  left: 12px;
+  right: 12px;
+  z-index: 20;
+}
+
+.command-suggestion-list {
+  background: var(--loki-sidebar);
+  border: 1px solid var(--loki-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.command-suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.command-suggestion-item:hover,
+.command-suggestion-item.selected {
+  background: color-mix(in srgb, var(--loki-accent) 12%, var(--loki-block-bg));
+}
+
+.command-suggestion-confidence {
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+.command-suggestion-content {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.command-suggestion-cmd {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  color: var(--loki-fg);
+  white-space: nowrap;
+}
+
+.command-suggestion-desc {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 12px;
+  color: var(--loki-fg);
+  opacity: 0.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
